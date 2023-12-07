@@ -1,5 +1,6 @@
+import file
 file.open('day1input.py', 'r')
 
-print(file)
+print('test')
 
 file.close()
