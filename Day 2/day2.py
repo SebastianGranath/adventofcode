@@ -15,13 +15,14 @@ for line in data:
         for j in range(len(colors)):
             try:
                 # ERRORS IN THIS SECTION
-                results[j][i] = games[i][games[i].index(colors[j])-1]
+                results[i][j] = games[i][games[i].index(colors[j])-1]
                 print(results[j][i])
             except:
-                results[j][i] = 0
+                results[i][j] = 0
+    print('Continue here')
+    #for i in len(results)
 
 
-        print(games[i])
     try:
         print(id)
     except:
