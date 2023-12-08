@@ -2,9 +2,9 @@ import numpy as np
 with open('day2input.txt', 'r') as f:
     data = f.readlines()
 
-
+answer = 0
 colors = [' red', ' green', ' blue']
-lims = [6, 5, 4]
+lims = [12, 13, 14]
 for line in data:
     line = line.split(':')
     id = line[0].split(' ')[-1]
@@ -20,10 +20,12 @@ for line in data:
             except:
                 results[i][j] = 0
     print('Continue here')
-    #for i in len(results)
+
+    if ( (results[0][:] <= lims[0]).all() and (results[1][:] <= lims[1]).all() and (results[2][:]<= lims[2]).all()):
+        answer = answer + int(id)
 
 
     try:
-        print(id)
+        print(answer)
     except:
         pass
