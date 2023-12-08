@@ -1,4 +1,4 @@
-with open('day2input.txt', 'r') as r:
+with open('day1p2input.txt', 'r') as r:
     data = r.readlines()
 line_nr = []
 for line in data:
