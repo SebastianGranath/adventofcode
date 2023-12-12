@@ -14,7 +14,7 @@ for line in data:
     te = []
     # There is an error when we have a symbol next to a number, see row data[4]
     for element in temp:
-        if any(chr.isdigit() for chr in element): te.append(re.sub("[^0-9]", "", element))
+        if any(chr.isdigit() for chr in element): te.append(re.sub("[^0-9]", "", element)) # ERROR HERE, '131*862' BECOMES '131862'
         if element == '\n' or element == temp[-1]: number_arr = number_arr + te; number_arr_copy.append(te)
 
 # Problem with reoccurring numbers in the complete number array
