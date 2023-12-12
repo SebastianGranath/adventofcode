@@ -40,6 +40,9 @@ for number in number_index:
     nr_start = number[1]
     nr_len = number[2]
     nrrr = number_arr[j] # For debugging
+    if nrrr=='26': #26 93 534
+        print('TET')
+        pass
     last_data_row_index = len(data) - 1 # Length is 10 but last index is 9
     if row_d == 0:
         # Scenario when we are at the top row, only need to check element be4 n after nr plus row below
@@ -168,8 +171,8 @@ for number in number_index:
 
 print(part_nr_list, '\nSum is: ', sum(np.array(part_nr_list,'int')), ' out of ', sum(np.array(number_arr,'int')))
 
-with open('output.txt','a') as w:
-    w.write('\n' + str(int(part_nr_list)))
+#with open('output.txt','a') as w:
+#    w.write('\n' + str(int(part_nr_list)))
 # Getting the part-number chunk
 # Storing the index of the numbers?
 
