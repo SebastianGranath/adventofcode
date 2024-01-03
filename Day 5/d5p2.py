@@ -48,40 +48,33 @@ def ControlSeeds(seeds):
     return answ
 
 def ControlSeedRange(R):
-    # For a range
-    seeds_static = R.copy()
-    seeds_temp = R.copy()
-
-    uncontrolled_elements = R
-
+    A = []
     for el, line in enumerate(data):
         if line[0].isnumeric():
             # Get three separate numbers
-            dest,src,range = [int(x) for x in line.split(' ')]
+            dest,src,sz = [int(x) for x in line.split(' ')]
 
-            dest_start = dest
-            source_start =src
-            source_end = src + range
-
+            src_end = src + sz
             diff = dest - src
-            rem = []
-            if source_start in R:
-                before_index = R.index(seeds == source_start)
-                before = seeds[0:before_index]
-                rem = seeds_temp[before_index:]
+            NR = []
 
-            if source_end in R:
-                end_index = R.index(seeds == source_end)
-                end = seeds[end_index:]
-                rem = seeds_temp[:end_index]
-            if rem != []:
-                rem += diff
+            while R:
+                (st, end) = R.pop()
 
-        else:
-            seeds_temp = seeds.copy()
 
-    answ = seeds_static[seeds.index(min(seeds))]  # Returns the shortest path
-    return answ
+                before = (st, min(end,src))
+                inter = (max(st,src), min(src_end, end))
+                after = (max(src_end, st), end)
+
+                if before[1]>before[0]:
+                    NR.append(before)
+                if inter[1]>inter[0]:
+                    A.append((inter[0]+diff, inter[1]+diff))
+                if after[1]>after[0]:
+                    NR.append(after)
+
+            R = NR
+    return A+R
 
 def BinarySearch(numbers, val):
     first = 0
@@ -120,10 +113,11 @@ spacing = 10**7
 min_dist = []
 
 seed_pairs = list(zip(seeds[::2], seeds[1::2]))
-for row in seed_pairs:
-    R = list(range(row[0], row[0]+row[1]))
-    ControlSeedRange(seeds)
-answ = ControlSeedRange(seeds)
+for start, sz in seed_pairs:
+    R = [(start, start+sz)]
+    R = ControlSeedRange(R)
+    min_dist.append(min(R)[0])
+answ = min(min_dist)
 
 
 
