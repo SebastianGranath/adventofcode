@@ -21,7 +21,7 @@ def combo_strength(combo):
     elif combo == [1,4,4,4,4]:
         return 'four-of-a-kind', 5
     elif combo == [5,5,5,5,5]:
-        return 'full-house', 6
+        return 'five-of-a-kind', 6
     else:
         return 'none', 0
 
@@ -32,9 +32,29 @@ def hand_value(hand):
 
 def compare_combos(combos):
     for combo in combos:
-        combo.append(sorted(hand_value(combo[-1])))
+        combo.append(hand_value(combo[-1]))
 
+    # for hand in combos:
+    #     hand_str, _, _, _, cards = hand
+    #
+    #     if hand_str == 2:
+    #         # Step 1: Identify the kicker (the card that appears only once)
+    #         kicker = [card for card in cards if cards.count(card) == 1][0]
+    #
+    #         # Step 2: Collect the remaining cards, excluding the kicker
+    #         remaining_cards = [card for card in cards if card != kicker]
+    #
+    #         # Step 3: Sort the remaining cards in descending order
+    #         remaining_cards.sort(reverse=True)
+    #
+    #         # Step 4: Add the kicker to the end of the sorted list
+    #         sorted_hand = remaining_cards + [kicker]
+    #         hand[4] = sorted_hand
+
+    # calulating two pairs wrong.
     combos = sorted(combos, key=lambda x: (x[0], x[4]))
+
+
     return combos
 
 def calculate_bids(combos, bids):
@@ -45,11 +65,12 @@ def calculate_bids(combos, bids):
         i += 1
         bid = int(bids[combo[2]])
         result += i * bid
+        combo.append([i, bid, i*bid])
 
-    return result
+    return result, combos
 
 
-with open('7.test', 'r') as f:
+with open('7.in', 'r') as f:
 
     D = f.read().strip()
 
@@ -67,7 +88,8 @@ for hand in hands:
 
 combos = compare_combos(combos)
 
-print(combos)
-result = calculate_bids(combos, bids)
+result, combos = calculate_bids(combos, bids)
 
+for combo in combos:
+    print(combo)
 print(result)
