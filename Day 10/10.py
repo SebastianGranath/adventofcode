@@ -33,6 +33,8 @@ def take_first_step(r ,c, adj_steps):
 
     i = 0
     for step in adj_steps:
+
+        # Need logic here for illigal moves, e.g. cannot move left to a |
         if adj_steps[step] == '.' or adj_steps[step] == None:
             continue
         else:
@@ -40,33 +42,66 @@ def take_first_step(r ,c, adj_steps):
             i += 1
     return new_coordinates, old_coordinates
 
-def follow_letters(new_coordinates, old_coordinates, D):
+def follow_letters(coordinate, old_coordinates, D):
     # Get two set of coordinates, return their next step
     # in --> [(2,1),(3,0)]
-    # Get letters for each coordinate
-    updated_coordinates = []
-    for coordinate, old_coord in zip(new_coordinates,old_coordinates):
-        direction = tuple(a - b for a, b in zip(coordinate, old_coord))
-        letter = D[coordinate[0]][coordinate[1]]
-        if letter == '|':
-            # Check: Handle both directions
-            updated_coordinates.append( tuple(a + b for a, b in zip(new_coordinates, direction)) )
-        elif letter =='-':
-            # Check: Handle both directions
-            updated_coordinates.append( tuple(a + b for a, b in zip(coordinate, direction)) )
-        elif letter == 'L':
-            pass
-        elif letter == 'J':
-            pass
-        elif letter == '7':
-            pass
-        elif letter == 'F':
-            pass
-    # get new coordinate, and return
+    # Get letters for each coordinate (Row, Column)
+    # left (0 , -1) up (1, 0) right (0, 1) down  (-1, 0)
 
-    return new_coordinates
 
-with open('10.test', 'r') as f:
+
+    direction = tuple(a - b for a, b in zip(coordinate, old_coordinates))
+    letter = D[coordinate[0]][coordinate[1]]
+    if letter == '|':
+        # Check: Handle both directions
+        if direction == (-1, 0):
+            # Go up
+            updated_coordinates = tuple(a + b for a, b in zip(coordinate, (-1, 0)))
+        else:
+            # Go down
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (1, 0)))
+
+    elif letter =='-':
+        # Check: Handle both directions
+        if direction == (0, 1):
+            # Go right
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (0, 1)))
+        else:
+            # Go left
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (0, -1)))
+
+    elif letter == 'L':
+        if direction == (1, 0):
+            # Go right
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (0, 1)))
+        else:
+            # Go up
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (-1, 0)))
+    elif letter == 'J':
+        if direction == (0, 1):
+            # Go up
+            updated_coordinates = tuple(a + b for a, b in zip(coordinate, (-1, 0)))
+        else:
+            # Go left
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (0, -1)))
+    elif letter == '7':
+        if direction == (0, 1):
+            # Go down
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (1, 0)))
+        else:
+            # Go left
+            updated_coordinates=tuple(a + b for a, b in zip(coordinate, (0, -1)))
+    elif letter == 'F':
+        if direction == (-1, 0):
+            # Go right
+            updated_coordinates = tuple(a + b for a, b in zip(coordinate, (0, 1)))
+        else:
+            # Go down
+            updated_coordinates = tuple(a + b for a, b in zip(coordinate, (1, 0)))
+
+    return updated_coordinates, coordinate
+
+with open('10.in', 'r') as f:
     D = f.read().strip()
 
 D =D.split('\n')
@@ -82,9 +117,18 @@ adj_c = next_step(r, c, D)
 
 n_coord, old_coord = take_first_step(r, c, adj_c)
 print(n_coord, old_coord)
+steps = 1
 while n_coord[0] != n_coord[1]:
-    for coord in n_coord:
-        r, c = coord
-        adj_c = next_step(r, c, D)
-        n_coord, old_coord = follow_letters(n_coord, old_coord, D)
+     # logic to take path not traveled
+
+    for i in range(len(n_coord)):
+        #r, c = n_coord[i], old_coord [i]
+        #adj_c = next_step(r, c, D)
+        # Select one of the coords.
+        n_coord[i], old_coord[i] = follow_letters(n_coord[i], old_coord[i], D)
+        if len(n_coord) != 2:
+            raise ValueError
+    steps += 1
+    print('Change: ', n_coord, old_coord, ' at step: ', steps)
+print(steps)
 
