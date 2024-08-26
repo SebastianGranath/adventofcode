@@ -34,7 +34,7 @@ def take_first_step(r ,c, adj_steps):
     i = 0
     for step in adj_steps:
 
-        # Need logic here for illigal moves, e.g. cannot move left to a |
+        # Need logic here for illegal moves, e.g. cannot move left to a |
         if adj_steps[step] == '.' or adj_steps[step] == None:
             continue
         else:
