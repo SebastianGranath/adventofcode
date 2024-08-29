@@ -70,18 +70,20 @@ def follow_letters(coordinate, old_coordinate, D):
 
 
 def sholace_calculation(path):
+    path.append(path[0])  # Add last element to complete loop
     path = np.array(path)
+
     sum = 0
     for i in range(0, len(path))[:-1]:
         el_1 = path[i]
         el_2 = path[i+1]
-        sum += np.linalg.det(path[i:i+2])
-        print(np.linalg.det(path[i:i+2]))
+        sum += int(np.linalg.det(path[i:i+2]))
+        #print(np.linalg.det(path[i:i+2]))
 
-    A = sum/2
-    b = len(path)
+    A = round((sum/2),0)
+    b = len(path) -1  # Remove last element
     # A = i + b/2 -1
-    i_points = A + 1 - b/2
+    i_points = int(A + 1 - b/2)
     print('integer points:', i_points, 'Area points:', A)
 
     return sum/2
@@ -108,7 +110,7 @@ def calculate_enclosed_area(path, D):
                     i += 1
 
 
-        print('Row: ',r, ' has ', counter, ' elements. Area: ', area)
+        #print('Row: ',r, ' has ', counter, ' elements. Area: ', area)
 
                 # if not (r, c + 1) in path and c + 1 != len(row) - 1:
                 #     while not (r, c_copy) in path:
@@ -121,7 +123,7 @@ def calculate_enclosed_area(path, D):
 
 
 
-with open('10.test', 'r') as f:
+with open('10.in', 'r') as f:
     D = f.read().strip()
 
 D =D.split('\n')
@@ -139,26 +141,39 @@ path.append((r, c))
 
 n_coord, old_coord = take_first_step(r, c, adj_c)
 steps = 1
+
+path_A = []
+path_B = []
+
 while n_coord[0] != n_coord[1]:
      # logic to take path not traveled
     path += n_coord
-
+    path_A += [n_coord[0]]
+    path_B += [n_coord[1]]
     for i in range(len(n_coord)):
         # Select one of the coords.
         n_coord[i], old_coord[i] = follow_letters(n_coord[i], old_coord[i], D)
         if len(n_coord) != 2:
             raise ValueError
     steps += 1
-    print('Change: ', n_coord, old_coord, ' at step: ', steps)
+    #print('Change: ', n_coord, old_coord, ' at step: ', steps)
 
 if n_coord[0] == n_coord[1]:
     path.append(n_coord[0])
+    path_A = [(r, c)] + path_A
+    path_B = path_B[:-1]
+    sorted_path = path_A+path_B[::-1]  # Flip B-array to get circle
+
 area = calculate_enclosed_area(path, D)
 
-sholace_calculation([(3,0),(0,1),(1,2),(2,3),(3,4),(4,4),(5,4),(2,4),(3,0)])
+sholace_calculation([(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 3), (0, 2), (0, 1), ])
+sholace_calculation(sorted_path)
 #area = sholace_calculation(path)
 interior = 0
 path_matrix = np.zeros([len(D), len(D[0])])
-for p in path:
+ii = 0
+for p in sorted_path:
     r,c = p
-    path_matrix[r][c] = 1
+    ii += 1
+    path_matrix[r][c] = ii
+print(path_matrix)
