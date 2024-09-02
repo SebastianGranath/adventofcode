@@ -4,28 +4,22 @@ import matplotlib.pyplot as plt
 
 
 def diff_array(line):
-    #for num in line: line[line.index(num)] = int(num)
-
     diff_array = []
     i = 0
     current_element = line[0]
 
-    if int(current_element) == 16:
-        #print('here')
-        pass
     while i != len(line)-1:
         next_element = line[i+1]
 
 
         diff = int(next_element) - int(current_element)
-
         if diff < 0:
             sign = diff / abs(diff)
             diff = int(abs(diff) * sign)
         diff_array.append(diff)
         i +=1
         current_element = line[i]
-    #print(diff_array)
+
     return diff_array
 
 with open('9.in', 'r') as f:
