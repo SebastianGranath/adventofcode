@@ -77,11 +77,12 @@ def sholace_calculation(path):
     for i in range(0, len(path))[:-1]:
         el_1 = path[i]
         el_2 = path[i+1]
-        sum += int(np.linalg.det(path[i:i+2]))
-        #print(np.linalg.det(path[i:i+2]))
+        calc = (el_1[0] * el_2[1]) - (el_1[1]*el_2[0])
+        sum += calc
+        #print('manual det', calc, 'NP det: ',np.linalg.det(path[i:i+2]))
 
-    A = round((sum/2),0)
-    b = len(path) -1  # Remove last element
+    A = sum / 2
+    b = len(path) - 1  # Remove element needed to complete the path
     # A = i + b/2 -1
     i_points = int(A + 1 - b/2)
     print('integer points:', i_points, 'Area points:', A)
@@ -167,7 +168,8 @@ if n_coord[0] == n_coord[1]:
 area = calculate_enclosed_area(path, D)
 
 sholace_calculation([(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 3), (0, 2), (0, 1), ])
-sholace_calculation(sorted_path)
+sholace_calculation([(0, 0), (4, 0),  (4, 4), (0, 4) ])
+sholace_calculation(sorted_path[::-1])
 #area = sholace_calculation(path)
 interior = 0
 path_matrix = np.zeros([len(D), len(D[0])])
