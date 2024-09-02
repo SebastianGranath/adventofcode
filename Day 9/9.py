@@ -1,40 +1,69 @@
 import sys
 import re
-
+import matplotlib.pyplot as plt
 
 
 def diff_array(line):
-    for num in line: line[line.index(num)] = int(num)
+    #for num in line: line[line.index(num)] = int(num)
 
     diff_array = []
     i = 0
     current_element = line[0]
-    while current_element != line[-1]:
+
+    if int(current_element) == 16:
+        #print('here')
+        pass
+    while i != len(line)-1:
         next_element = line[i+1]
 
-        diff = next_element - current_element
+
+        diff = int(next_element) - int(current_element)
+
+        if diff < 0:
+            sign = diff / abs(diff)
+            diff = int(abs(diff) * sign)
         diff_array.append(diff)
         i +=1
         current_element = line[i]
-    if current_element == line[-1]:
-        for _ in line: diff_array.append(0)
-        return diff_array
+    #print(diff_array)
     return diff_array
 
-with open('9.test', 'r') as f:
+with open('9.in', 'r') as f:
     D = f.read().strip()
 
 data = D.split('\n')
 for line in data:
     data[data.index(line)] = line.split(' ')
 
+
+def get_ans(line):
+
+
+sum = get_ans(data)
+
 diff = []
+end_els = []
+big_calc = []
 for line in data:
-    end_els = []
-    while sum(diff) != 0 or diff == []:
+    line = line[::-1] # For part 2
+    end_els.append(int(line[-1]))
+
+
+    while diff == [] or any(diff):  # [6, 3, 0, -3, -6] gives sum =0
         diff = diff_array(line)
-        end_els.append(diff[-1])
+        if diff == []:
+            end_els.append(0)
+            break
+        else:
+            end_els.append(diff[-1])
         line = diff
-    print(end_els)
+    print(int(sum(end_els)))
+    big_calc.append(int(sum(end_els)))
+    end_els = []
+    diff = []
+
+
+
+print('answer: ', sum(big_calc))
 
 
