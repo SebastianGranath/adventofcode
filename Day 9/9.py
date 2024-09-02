@@ -30,10 +30,7 @@ for line in data:
     data[data.index(line)] = line.split(' ')
 
 
-def get_ans(line):
 
-
-sum = get_ans(data)
 
 diff = []
 end_els = []
