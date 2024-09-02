@@ -2,7 +2,8 @@ import sys
 import re
 
 import numpy as np
-
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 def get_adjacent_chars(r,c, D):
     # Left Up Right Down
@@ -69,7 +70,7 @@ def follow_letters(coordinate, old_coordinate, D):
     return updated_coordinates, coordinate
 
 
-def sholace_calculation(path):
+def shoelace_calculation(path):
     path.append(path[0])  # Add last element to complete loop
     path = np.array(path)
 
@@ -87,41 +88,7 @@ def sholace_calculation(path):
     i_points = int(A + 1 - b/2)
     print('integer points:', i_points, 'Area points:', A)
 
-    return sum/2
-
-
-
-def calculate_enclosed_area(path, D):
-    area = 0
-
-    for r, row in enumerate(D):
-        counter = 0
-        stop = 0
-        i = 0
-        for c, column in enumerate(row):
-            if (r, c) in path and (r+1, c+1 not in path):
-                # If current element is in path, but not the next
-                i = 0
-                counter += 1
-                while not stop:
-                    if (r, c) in path:
-                        # Once an element if found, calculate area, and return new value for current c
-                        area += i
-                        stop = 1
-                    i += 1
-
-
-        #print('Row: ',r, ' has ', counter, ' elements. Area: ', area)
-
-                # if not (r, c + 1) in path and c + 1 != len(row) - 1:
-                #     while not (r, c_copy) in path:
-                #         area += 1
-                #         c_copy += 1
-                #     c = c_copy
-
-
-    return area
-
+    return A, i_points
 
 
 with open('10.in', 'r') as f:
@@ -165,18 +132,63 @@ if n_coord[0] == n_coord[1]:
     path_B = path_B + [n_coord[0]]
     sorted_path = path_A+path_B[::-1]  # Flip B-array to get circle
 
-area = calculate_enclosed_area(path, D)
+area, i_points = shoelace_calculation(sorted_path[::-1])
 
-sholace_calculation([(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (3, 4), (2, 4), (1, 4), (0, 4), (0, 3), (0, 2), (0, 1), ])
-sholace_calculation([(0, 0), (4, 0),  (4, 4), (0, 4) ])
-sholace_calculation(sorted_path[::-1])
-#area = sholace_calculation(path)
-interior = 0
 path_matrix = np.zeros([len(D), len(D[0])])
-ii = 0
-for p in sorted_path:
-    r,c = p
-    ii += 1
-    path_matrix[r][c] = ii
-print(path_matrix)
-input()
+
+# Set up the plot
+fig, ax = plt.subplots()
+im = ax.imshow(path_matrix, cmap='Greys', origin='lower')
+
+# Initialize the line plot
+line, = ax.plot([], [], color='blue', linewidth=1)
+
+# Initialize the red dot for the current position
+current_dot, = ax.plot([], [], color='red', marker='o', markersize=5, linestyle='None')
+
+
+# Initialize the path data
+def init():
+    line.set_data([], [])
+    current_dot.set_data([], [])
+    return im, line, current_dot,
+
+# Update the path for the animation
+def update(frame):
+    # Extract x and y coordinates up to the current frame
+    path_x, path_y = zip(*sorted_path[:frame + 1])
+
+    # Update the line
+    line.set_data(path_y, path_x)
+
+    # Update the current dot (most recent point)
+    current_dot.set_data([path_y[-1]], [path_x[-1]])
+
+    return im, line, current_dot,
+
+
+# Create the animation
+ani = FuncAnimation(fig, update, frames=range(0,len(sorted_path), 3), init_func=init, blit=True, repeat=False,  interval=0.01)
+
+plt.title('Movement Path Animation, i-points: '+ str(i_points) + ', Area: ' + str(area))
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+
+
+# After the animation, fill the enclosed area
+def fill_area_after_animation(*args):
+    # Extract x and y coordinates of the full path
+    path_x, path_y = zip(*sorted_path)
+
+    # Fill the area inside the path
+    ax.fill(path_y, path_x, color='yellow', alpha=0.4)  # Adjust alpha for transparency
+
+    plt.draw()  # Redraw the plot with the filled area
+
+
+
+# Connect the fill function to be called after the animation ends
+ani.event_source.stop = fill_area_after_animation
+
+
+plt.show()
