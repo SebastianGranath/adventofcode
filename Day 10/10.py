@@ -162,7 +162,7 @@ while n_coord[0] != n_coord[1]:
 if n_coord[0] == n_coord[1]:
     path.append(n_coord[0])
     path_A = [(r, c)] + path_A
-    path_B = path_B[:-1]
+    path_B = path_B + [n_coord[0]]
     sorted_path = path_A+path_B[::-1]  # Flip B-array to get circle
 
 area = calculate_enclosed_area(path, D)
@@ -179,3 +179,4 @@ for p in sorted_path:
     ii += 1
     path_matrix[r][c] = ii
 print(path_matrix)
+input()
