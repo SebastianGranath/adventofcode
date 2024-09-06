@@ -2,7 +2,7 @@ import os
 from os import listdir
 D = listdir()
 
-high_day = 0
+high_day = []
 def next_day(high_day):
     next_day = str(int(high_day) + 1)
     new_folder = 'Day '+next_day
@@ -30,8 +30,8 @@ else:
     for el in D:
         el = el.split(' ')
         if el[0] == 'Day':
-            high_day = el[1]
-    next_day(high_day)
+            high_day.append(int(el[1]))
+    next_day(max(high_day))
 
 
 print(listdir())
