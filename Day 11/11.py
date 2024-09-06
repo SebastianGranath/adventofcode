@@ -1,5 +1,6 @@
 import sys
 import re
+import math
 with open('11.test', 'r') as f:
     D = f.read().strip().split('\n')
 print('input: ', D)
@@ -73,35 +74,39 @@ for pair in pairs:
     x, y = x1, y1
     dx = x2-x1
     dy = y2-y1
-    if dx == 0: dx = 0.1
-    gradient = dy / float(dx)
-    print(gradient)
+    rx, ry = 1, 0
+    # Get angle and move in correct direction?
+    angle = math.acos((rx*x2+ry*y2)/(math.sqrt(rx**2+ry**2)*math.sqrt(x2**2+y2**2)))*180/math.pi
+    print(pair, angle)
+    # if dx == 0: dx = 0.1
+    # gradient = dy / float(dx)
+    # print(gradient)
 
-    if gradient > 1:
-        dx, dy = dy, dx
-        x, y = y, x
-
-        x1, y1 = y1, x1
-        x2, y2 = y2, x2
-        p = 2*dy - dx
-        print(f"x = {x}, y = {y}")
-        # Initialize the plotting points
-        xcoordinates = [x]
-        ycoordinates = [y]
-
-        for k in range(2, dx + 2):
-            if p > 0:
-                y = y + 1 if y < y2 else y - 1
-                p = p + 2 * (dy - dx)
-            else:
-                p = p + 2 * dy
-
-            x = x + 1 if x < x2 else x - 1
-
-            print(f"x = {x}, y = {y}")
-            xcoordinates.append(x)
-            ycoordinates.append(y)
-    print(pair,' got steps ', len(xcoordinates)-1)
+    # if gradient > 1:
+    #     dx, dy = dy, dx
+    #     x, y = y, x
+    #
+    #     x1, y1 = y1, x1
+    #     x2, y2 = y2, x2
+    #     p = 2*dy - dx
+    #     print(f"x = {x}, y = {y}")
+    #     # Initialize the plotting points
+    #     xcoordinates = [x]
+    #     ycoordinates = [y]
+    #
+    #     for k in range(2, dx + 2):
+    #         if p > 0:
+    #             y = y + 1 if y < y2 else y - 1
+    #             p = p + 2 * (dy - dx)
+    #         else:
+    #             p = p + 2 * dy
+    #
+    #         x = x + 1 if x < x2 else x - 1
+    #
+    #         print(f"x = {x}, y = {y}")
+    #         xcoordinates.append(x)
+    #         ycoordinates.append(y)
+    # print(pair,' got steps ', len(xcoordinates)-1)
 
 # n - nodes
 # Pairs = sum(n - 1) n->1
