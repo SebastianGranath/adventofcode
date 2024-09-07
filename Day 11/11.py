@@ -56,23 +56,10 @@ def get_distance(D, pairs):
     for pair in pairs:
         # start, goal
         [x1, y1], [x2, y2] = pair
+        dx = abs(x2 - x1)
+        dy = abs(y2 - y1)
+        step_sum += dx+dy
 
-        step = 0
-        while [x1, y1] != [x2, y2]:
-
-            dx = x2 - x1
-            dy = y2 - y1
-            if abs(dx) > abs(dy):
-                x1, y1 = [x1 + int(dx / abs(dx)), y1]
-            else:
-                x1, y1 = [x1, y1 + int(dy / abs(dy))]
-            if D[x1][y1] == '*':
-                step += 1
-                #step += 10
-            else:
-                step += 1
-
-        step_sum += step
     return step_sum
 
 # get data
