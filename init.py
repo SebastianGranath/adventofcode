@@ -18,7 +18,7 @@ def next_day(high_day):
     f = open(os.path.join(new_folder, next_day + '.py'), 'w')
     row1 = str('import sys\nimport re\n')
     row1 = row1 + str('with open(\'' + next_day + '.in\', \'r\') as f:\n')
-    row1 = row1 + str('    D = f.read().strip()\n')
+    row1 = row1 + str('    D = f.read().strip()\nprint(D)\n')
     f.write(row1)
     f.close()
 
