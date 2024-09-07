@@ -1,7 +1,5 @@
 import sys
 import re
-import math
-
 
 def get_index(D):
     rows_index_to_insert = []
@@ -50,14 +48,34 @@ def get_pairs(nodes):
 
     return pairs
 
-
 def get_distance(D, pairs):
     step_sum = 0
     for pair in pairs:
         # start, goal
         [x1, y1], [x2, y2] = pair
+
         dx = abs(x2 - x1)
         dy = abs(y2 - y1)
+
+        step_sum += dx+dy
+
+    return step_sum
+
+
+def get_distance_part2(D, pairs):
+    step_sum = 0
+    str = '*' * len(D[0])
+    for pair in pairs:
+        # start, goal
+        [x1, y1], [x2, y2] = pair
+
+        rows = D[min(x1,x2):max(x1,x2)]
+        star_row_count = D[min(x1,x2):max(x1,x2)].count(str)
+        dx = abs(x2 - x1)-star_row_count + star_row_count * (1000000-1)
+        colums = D[0][min(y1,y2):max(y1,y2)]
+        star_column_count = D[0][min(y1,y2):max(y1,y2)].count('*')
+        dy = abs(y2 - y1)-star_column_count + star_column_count * (1000000-1)
+
         step_sum += dx+dy
 
     return step_sum
@@ -73,9 +91,9 @@ rows_index_to_insert, column_index_to_insert = get_index(D)
 
 # Insert expansion row
 D = insert_space_row(D, rows_index_to_insert)
-print('Rows expand\n', D)
+print('Rows expanded')
 D = insert_space_col(D, column_index_to_insert)
-print('columns expand\n', D)
+print('Columns expanded\n')
 
 # Find nodes
 nodes = get_nodes(D)
@@ -87,38 +105,8 @@ print('Unique pairs: ', len(pairs))
 
 # Shortest path between node pairs
 distance_sum = get_distance(D, pairs)
-print('Total distance: ', distance_sum)
+print('Total distance p1: ', distance_sum)
 
-    # if dx == 0: dx = 0.1
-    # gradient = dy / float(dx)
-    # print(gradient)
-
-    # if gradient > 1:
-    #     dx, dy = dy, dx
-    #     x, y = y, x
-    #
-    #     x1, y1 = y1, x1
-    #     x2, y2 = y2, x2
-    #     p = 2*dy - dx
-    #     print(f"x = {x}, y = {y}")
-    #     # Initialize the plotting points
-    #     xcoordinates = [x]
-    #     ycoordinates = [y]
-    #
-    #     for k in range(2, dx + 2):
-    #         if p > 0:
-    #             y = y + 1 if y < y2 else y - 1
-    #             p = p + 2 * (dy - dx)
-    #         else:
-    #             p = p + 2 * dy
-    #
-    #         x = x + 1 if x < x2 else x - 1
-    #
-    #         print(f"x = {x}, y = {y}")
-    #         xcoordinates.append(x)
-    #         ycoordinates.append(y)
-    # print(pair,' got steps ', len(xcoordinates)-1)
-
-# n - nodes
-# Pairs = sum(n - 1) n->1
-# Bresenheims line algorithm
+# Shortest path between node pairs
+distance_sum = get_distance_part2(D, pairs)
+print('Total distance p2: ', distance_sum)
