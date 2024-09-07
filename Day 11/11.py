@@ -1,9 +1,7 @@
 import sys
 import re
 import math
-with open('11.test', 'r') as f:
-    D = f.read().strip().split('\n')
-print('input: ', D)
+
 
 def get_index(D):
     rows_index_to_insert = []
@@ -21,7 +19,7 @@ def get_index(D):
 def insert_space_row(D, rows_index_to_insert):
     i_count = 0
     for i, el in enumerate(rows_index_to_insert):
-        D.insert(el+i_count, D[rows_index_to_insert[0]])
+        D.insert(el+i_count, len(D[rows_index_to_insert[0]])*'*')
         i_count += 1
     return D
 
@@ -30,7 +28,7 @@ def insert_space_col(D, column_index_to_insert):
     for i, el in enumerate(column_index_to_insert):
         for r, row in enumerate(D):
 
-            D[r] = D[r][:el+i_count] + '.' + D[r][el+i_count:]
+            D[r] = D[r][:el+i_count] + '*' + D[r][el+i_count:]
         i_count += 1
     return D
 
@@ -51,6 +49,38 @@ def get_pairs(nodes):
             pairs.append([node, partner])
 
     return pairs
+
+
+def get_distance(D, pairs):
+    step_sum = 0
+    for pair in pairs:
+        # start, goal
+        [x1, y1], [x2, y2] = pair
+
+        step = 0
+        while [x1, y1] != [x2, y2]:
+
+            dx = x2 - x1
+            dy = y2 - y1
+            if abs(dx) > abs(dy):
+                x1, y1 = [x1 + int(dx / abs(dx)), y1]
+            else:
+                x1, y1 = [x1, y1 + int(dy / abs(dy))]
+            if D[x1][y1] == '*':
+                step += 1
+                #step += 10
+            else:
+                step += 1
+
+        step_sum += step
+    return step_sum
+
+# get data
+with open('11.in', 'r') as f:
+    D = f.read().strip().split('\n')
+print('input: ', D)
+
+
 # Find rows & cols with only dots
 rows_index_to_insert, column_index_to_insert = get_index(D)
 
@@ -69,15 +99,9 @@ print('Unique pairs: ', len(pairs))
 
 
 # Shortest path between node pairs
-for pair in pairs:
-    [x1, y1], [x2, y2] = pair
-    x, y = x1, y1
-    dx = x2-x1
-    dy = y2-y1
-    rx, ry = 1, 0
-    # Get angle and move in correct direction?
-    angle = math.acos((rx*x2+ry*y2)/(math.sqrt(rx**2+ry**2)*math.sqrt(x2**2+y2**2)))*180/math.pi
-    print(pair, angle)
+distance_sum = get_distance(D, pairs)
+print('Total distance: ', distance_sum)
+
     # if dx == 0: dx = 0.1
     # gradient = dy / float(dx)
     # print(gradient)
