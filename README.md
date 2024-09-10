@@ -47,11 +47,13 @@ Performance: While correctness is a priority, I'll also aim to improve the effic
 - **Testing**: Ensuring each solution works correctly with different input cases.
 
 ## Progress
-| Day  | Puzzle Title         | Difficulty  | Solution Link                         |
-|------|----------------------|-------------|---------------------------------------|
-| Day 1| Sample Puzzle Title   |          | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/day1.py)              |
-| Day 2| Another Puzzle Title  |        | [Solution](./Day 1/1.py)              |
-| Day 3| Yet Another Puzzle    |          | [Solution](./Day 1/1.py)              |
+| Day  | Puzzle Title         | Difficulty  | Solution Link                                                                            |
+|------|----------------------|-------------|------------------------------------------------------------------------------------------|
+| Day 1| Sample Puzzle Title   |          | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/day1.py) |
+| Day 2| Another Puzzle Title  |        | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%202/day2.py) |
+| Day 3| Yet Another Puzzle    |          |                                                                  |
+
+
 
 (This table will be updated daily as I complete each puzzle)
 
@@ -59,7 +61,7 @@ Performance: While correctness is a priority, I'll also aim to improve the effic
 To run a particular day's solution, navigate to the specific day’s folder and execute the script.
 If you want to alternate between the test input and the puzzle input, change the file ending in the line importing the data. 
 - "*.test": test input
-- '*.in": acctual puzzle input
+- "*.in": actual puzzle input
 
 ## Contact
 Feel free to reach out if you have any questions or feedback regarding my code. You can connect with me on LinkedIn or email me at youremail@example.com.
