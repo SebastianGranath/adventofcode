@@ -1,23 +1,24 @@
 import os
 from os import listdir
-import requests
-from dotenv import load_dotenv
+from datetime import datetime
 
-# Load environment variables from .env file
-load_dotenv()
+# Set the base directory of your project (root directory)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Get session cookie from environment variables
-SESSION = os.getenv("SESSION")
+# Function to get the current year
+def get_current_year():
+    return str(datetime.now().year)
 
-if not SESSION:
-    raise ValueError("SESSION environment variable not set!")
+# Function to get the folder for the current year (checks if it exists and avoids redundant folder creation)
+def get_year_folder(year):
+    return os.path.join(BASE_DIR, year)
 
-# Function to get the highest day folder currently present.
-def get_highest_day():
+# Function to get the highest day folder currently present in the year's directory
+def get_highest_day(year_folder):
     try:
-        D = listdir()
+        D = listdir(year_folder)
     except Exception as e:
-        print(f"Error listing directories: {e}")
+        print(f"Error listing directories in {year_folder}: {e}")
         return 0
 
     high_day = 0
@@ -30,10 +31,10 @@ def get_highest_day():
                 print(f"Skipping invalid day folder: {el}")
     return high_day
 
-# Function to create the new day's folder and files.
-def next_day(high_day):
+# Function to create the new day's folder and files
+def next_day(year_folder, high_day):
     next_day = str(int(high_day) + 1)
-    new_folder = 'Day ' + next_day
+    new_folder = os.path.join(year_folder, 'Day ' + next_day)
 
     try:
         os.mkdir(new_folder)
@@ -44,23 +45,15 @@ def next_day(high_day):
         print(f"Error creating folder {new_folder}: {e}")
         return
 
-    # Fetch input from Advent of Code
-    input_url = f'https://adventofcode.com/2023/day/{next_day}/input'
-    headers = {'cookie': f'session={SESSION}'}
-    try:
-        response = requests.get(input_url, headers=headers)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        puzzle_input = response.text.strip()
-    except requests.RequestException as e:
-        print(f"Failed to fetch input for Day {next_day}: {e}")
-        return
-
     try:
         with open(os.path.join(new_folder, next_day + '.in'), 'w') as f:
-            f.write(puzzle_input)
+            f.write("# puzzle_input")
         open(os.path.join(new_folder, next_day + '.test'), 'w').close()
         solution_script = f"""import sys
 import re
+import os
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 with open('{next_day}.in', 'r') as f:
     D = f.read().strip()
@@ -72,23 +65,18 @@ print(D)
         print(f"Error creating files in {new_folder}: {e}")
         return
 
-    # Add a new row to the README.md
-    update_readme(next_day)
+    update_readme(year_folder, next_day)
 
 # Function to update the README.md with the new day's row
-def update_readme(next_day):
-    readme_file = 'README.md'
+def update_readme(year_folder, next_day):
+    readme_file = os.path.join(year_folder, 'README.md')
 
-    # Make sure the README file exists
     if not os.path.exists(readme_file):
         print(f"{readme_file} not found!")
         return
 
-    # URL to the day's problem
-    problem_url = f'https://adventofcode.com/2023/day/{next_day}'
-
-    # New row for the progress table
-    new_row = f"| Day {next_day} | Puzzle Title | | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%20{next_day}/{next_day}.py) |\n"
+    problem_url = f'https://adventofcode.com/{year_folder.split("/")[-1]}/day/{next_day}'
+    new_row = f"| Day {next_day} | Puzzle Title | | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/{year_folder}/Day%20{next_day}/{next_day}.py) |\n"
 
     try:
         with open(readme_file, 'r') as f:
@@ -97,12 +85,11 @@ def update_readme(next_day):
         print(f"Error reading {readme_file}: {e}")
         return
 
-    # Find the position to insert the new row
     table_start = None
     table_end = None
     for i, line in enumerate(lines):
         if line.strip() == "| Day  | Puzzle Title         | Difficulty  | Solution Link                                                                            |":
-            table_start = i + 2  # Skip the table header
+            table_start = i + 2
         elif table_start is not None and line.strip() == "":
             table_end = i
             break
@@ -111,11 +98,10 @@ def update_readme(next_day):
         print("Couldn't find the start of the progress table in README.md")
         return
 
-    # Add the new row to the correct place
     if table_end is not None:
         lines.insert(table_end, new_row)
     else:
-        lines.append(new_row)  # If no empty line was found, append to the end
+        lines.append(new_row)
 
     try:
         with open(readme_file, 'w') as f:
@@ -125,14 +111,22 @@ def update_readme(next_day):
 
 # Main script logic
 def main():
-    high_day = get_highest_day()
+    year = get_current_year()
+    year_folder = get_year_folder(year)
 
+    try:
+        os.makedirs(year_folder, exist_ok=True)
+    except Exception as e:
+        print(f"Error creating year folder {year_folder}: {e}")
+        return
+
+    high_day = get_highest_day(year_folder)
     if high_day == 0:
-        print("No 'Day X' folders found, starting with Day 1.")
+        print(f"No 'Day X' folders found for {year}, starting with Day 1.")
     else:
-        print(f"Highest day folder found: Day {high_day}")
+        print(f"Highest day folder found for {year}: Day {high_day}")
 
-    next_day(high_day)
+    next_day(year_folder, high_day)
 
 if __name__ == "__main__":
     main()

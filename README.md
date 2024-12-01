@@ -46,13 +46,20 @@ Performance: While correctness is a priority, I'll also aim to improve the effic
 - **Code Efficiency**: Optimizing solutions to meet performance constraints.
 - **Testing**: Ensuring each solution works correctly with different input cases.
 
-## Progress
+## Progress 2023
 | Day  | Puzzle Title         | Difficulty  | Solution Link                                                                            |
 |------|----------------------|-------------|------------------------------------------------------------------------------------------|
 | Day 1| Sample Puzzle Title   |          | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/day1.py) |
 | Day 2| Another Puzzle Title  |        | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%202/day2.py) |
 | Day 3| Yet Another Puzzle    |          |                                                                  |
+| Day 2 | Puzzle Title | | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%202/2.py) |
+| Day 1 | Puzzle Title | | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/1.py) |
+| Day 1 | Puzzle Title | | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/1.py) |
 
+## Progress 2024
+| Day  | Puzzle Title         | Difficulty  | Solution Link                                                                            |
+|------|----------------------|-------------|------------------------------------------------------------------------------------------|
+| Day 0| Sample Puzzle Title   |          | [Solution](https://github.com/SebastianGranath/adventofcode/blob/master/Day%201/day1.py) |
 
 
 (This table will be updated daily as I complete each puzzle)
