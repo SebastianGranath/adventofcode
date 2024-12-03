@@ -18,7 +18,7 @@ def part1(D):
         operations += item[0]*item[1]
         
         #print(item)
-    return print('part 1: ', operations)
+    return operations
 
 def part2(D):
     pattern_dont = r"don\'t\(\)"
@@ -56,19 +56,17 @@ def part2(D):
         D = D[:idx] + (end_idx - idx) * '*' + D[end_idx:]
         if not break_flag:
             print(f'remove from {idx} to {end_idx}')
-            
+
             #print('D updated')
         #print('after operation: ', len(D))
         #result += part1(D[:idx])
     print(D)
 
-    part1(D)
+    return part1(D)
 
     # Cut out the irrelevant parts of the input
     # do is activated from start
      
+print(f'Part 1: {part1(D)}\nPart 2: {part2(D)}')
 
-part1(D)
-part2(D)
-
-# fails: 19 604 994, 10 888 683 (too low), 87 519 257  (too high)
+# fails: 19 604 994, 10 888 683 (too low), 87 519 257  (too high), 85 508 223 (pass)
