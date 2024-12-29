@@ -1,4 +1,4 @@
-import os
+import os, re
 import requests
 from os import listdir
 from datetime import datetime
@@ -60,13 +60,11 @@ def next_day(year_folder, high_day):
             f.write(test_input)
 
         # Create solution script
-        solution_script = f"""import sys
-import re
-import os
+        solution_script = f"""import sys, re, os
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-with open('{next_day}.in', 'r') as f:
+with open('{next_day}.test', 'r') as f:
     D = f.read().strip()
 print(D)
 """
@@ -107,9 +105,18 @@ def get_test_input(day):
     try:
         response = requests.get(url)
         if response.status_code == 200:
-            print(response.content)
+            print(response.text.strip())
 
-            return response.text.strip()  # Return the puzzle input
+            # Match the first <code> tag and extract its content
+            match = re.search(r'<code>(.*?)</code>', response.text.strip(), flags=re.DOTALL)
+
+            if match:
+                code_content = match.group(1)  # Extract the content inside the first <code> tag
+                print(code_content)
+            else:
+                print("No <code> tag found.")
+
+            return code_content  # Return the puzzle input
         else:
             print(f"Error fetching puzzle input for day {day}: {response.status_code}")
             return "# Error fetching input"
